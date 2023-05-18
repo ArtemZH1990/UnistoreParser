@@ -1,4 +1,5 @@
 import csv
+from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -46,7 +47,7 @@ def soup_getter(url):
     return BeautifulSoup(res.text, "lxml")
 
 
-with open(r"/Work/UnistoreParser/UnistoreItems.csv", "a",
+with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\UnistoreItemParser.py", "a",
           encoding="utf-8-sig", newline="") as file:
     # writer = csv.writer(file, delimiter=";")
     # writer.writerow(columns)
@@ -77,7 +78,9 @@ with open(r"/Work/UnistoreParser/UnistoreItems.csv", "a",
                         container = browser.find_elements(By.XPATH, every_item_XPATH)
 
                         if len(container) - 1 == item_count:  # -1 cause there is one odd element in top bar of the site
-                            data_container.append(container[1:])
+                            for li in container[1:]:
+                                link = li.get_attribute("href")
+                                data_container.append(link)
                             browser.quit()
                             break
                         else:
@@ -109,7 +112,9 @@ with open(r"/Work/UnistoreParser/UnistoreItems.csv", "a",
                         elif sum(item_summator) + container_count == item_count:
                             # sub_container unpacking
                             sub_container = [i for j in sub_container for i in j]
-                            data_container.append(sub_container)
+                            for li in sub_container:
+                                link = li.get_attribute("href")
+                                data_container.append(link)
                             browser.quit()
                             break
                         else:
@@ -127,6 +132,7 @@ with open(r"/Work/UnistoreParser/UnistoreItems.csv", "a",
     data_container = [i for j in data_container for i in j]   #All products here!!!
 
     print(data_container)
+    print(len(data_container))
 
 
 
