@@ -23,8 +23,8 @@ columns = ["Наименование товара",
            "Цена розничная",
            "Минимальная партия, шт",
            "Количество в упаковке",
-           "Фото товара",
-           "Производитель"]
+           "Производитель",
+           "Поставщик"]
 
 url = "https://opt.unistore.by/"
 headers = {"Cache-Control": "no-store, no-cache, must-revalidate",
@@ -126,9 +126,6 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                         action.perform()
 
 #-----------------------------------------------------------------------------------------------------
-
-
-    #data_container = [i for j in data_container for i in j]   #All products here!!!
 
     print(data_container)
     print(len(data_container))
