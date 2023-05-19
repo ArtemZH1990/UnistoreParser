@@ -12,7 +12,7 @@ import html
 import time
 
 # -----Locators--------#
-every_item_XPATH = "//div[@class='title']//a[@class='fancy_ajax']"
+every_item_XPATH = "//div[@class='img']//a[@class='fancy_ajax']"
 esc_button_XPATH = "//button[@class='mfp-close']"
 scroll_container_XPATH = "//div[@class ='products_block__wrapper products_4_columns vertical']"
 footer_title_XPATH = "//div[@class='footer__title']"
@@ -72,13 +72,13 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
             items_quantity = browser.find_element(By.XPATH, items_quantity_XPATH).text
             item_count = int(items_quantity.split()[1])
 
-            if item_count < 144:  # 144 max items on full load page
+            if item_count <= 144:  # 144 max items on full load page
                 while True:
                     try:
                         container = browser.find_elements(By.XPATH, every_item_XPATH)
 
-                        if len(container) - 1 == item_count:  # -1 cause there is one odd element in top bar of the site
-                            for li in container[1:]:
+                        if len(container) == item_count:  # -1 cause there is one odd element in top bar of the site
+                            for li in container:
                                 link = li.get_attribute("href")
                                 data_container.append(link)
                             browser.quit()
@@ -90,9 +90,8 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                         action.scroll_by_amount(0, 3000)
                         action.scroll_by_amount(0, 500)
                         action.perform()
-
+#---------------------------------------------------------------------------------IMPROVE THIS SHIT!!!!
             elif item_count > 144:
-                sub_container = []
                 item_summator = []
                 container_count = 0
 
@@ -100,19 +99,19 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                 while True:
                     try:
                         container = browser.find_elements(By.XPATH, every_item_XPATH)
-                        container_count += len(container) - 1
-                        if len(container) - 1 == 144:
+                        container_count += len(container)
+                        if len(container) == 144:
                             item_summator.append(container_count)
-                            sub_container.append(container)
-                            container_count = 0
+                            for li in container:
+                                link = li.get_attribute("href")
+                                data_container.append(link)
                             next_page = browser.find_element(By.XPATH, next_page_link_XPATH)
                             next_page.click()
                             raise Exception
 
                         elif sum(item_summator) + container_count == item_count:
                             # sub_container unpacking
-                            sub_container = [i for j in sub_container for i in j]
-                            for li in sub_container:
+                            for li in container:
                                 link = li.get_attribute("href")
                                 data_container.append(link)
                             browser.quit()
@@ -126,10 +125,10 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                         action.scroll_by_amount(0, 500)
                         action.perform()
 
+#-----------------------------------------------------------------------------------------------------
 
 
-
-    data_container = [i for j in data_container for i in j]   #All products here!!!
+    #data_container = [i for j in data_container for i in j]   #All products here!!!
 
     print(data_container)
     print(len(data_container))
