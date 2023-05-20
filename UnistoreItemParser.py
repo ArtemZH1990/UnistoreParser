@@ -29,7 +29,7 @@ columns = ["Наименование товара",
            "Минимальная партия, шт",
            "Количество в упаковке",
            "Изображение",
-           "Производитель",
+           "Производитель"
            ]
 
 url = "https://opt.unistore.by/"
@@ -42,7 +42,7 @@ def browser_getter(url):
     browser = webdriver.Chrome()
     browser.maximize_window()
     browser.get(url)
-    browser.implicitly_wait(10)
+    browser.implicitly_wait(20)
     return browser
 
 
@@ -137,52 +137,41 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
         browser = browser_getter(i)
         soup = soup_getter(i)
 
-        item_name = soup.find("h1").text
-        price_info = browser.find_element(By.XPATH, price_XPATH).text.split(".")
-        price_container = list(filter(lambda x: x.isdigit() == True, [i.strip("рк") for i in price_info]))
-        actual_price = int(price_container[0]) + int(price_container[1]) / 100
-        quantity_con = browser.find_elements(By.XPATH, min_quantity_XPATH)
-        filtered_quantity = [i.text.split()[-1] for i in quantity_con]
-        min_quantity = filtered_quantity[0]
-        quantity_in_box = filtered_quantity[1]
-
         try:
+            item_name = soup.find("h1").text
+            price_info = browser.find_element(By.XPATH, price_XPATH).text.split(".")
+            price_container = list(filter(lambda x: x.isdigit() == True, [i.strip("рк") for i in price_info]))
+            actual_price = int(price_container[0]) + int(price_container[1]) / 100
+            quantity_con = browser.find_elements(By.XPATH, min_quantity_XPATH)
+            filtered_quantity = [i.text.split()[-1] for i in quantity_con]
+            min_quantity = filtered_quantity[0]
+            quantity_in_box = filtered_quantity[1]
             browser.find_element(By.XPATH, item_description_button_XPATH).click()
             item_description = browser.find_elements(By.XPATH, item_description_XPATH)
+
             if item_description:
+                creator = item_description[0].text
                 try:
                     photo_item_link = browser.find_element(By.XPATH, photo_item_link_XPATH).get_attribute("src")
                     if photo_item_link:
-                        if len(item_description) == 1:
-                            creator = item_description[0].text
-                            lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
-                            writer.writerow(lst)
-                            browser.quit()
-
-                except:
-                    photo_item_link = "-"
-                    if len(item_description) == 1:
-                        creator = item_description[0].text
-                        lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
-                        writer.writerow(lst)
-                        browser.quit()
-
-            else:
-                try:
-                    photo_item_link = browser.find_element(By.XPATH, photo_item_link_XPATH).get_attribute("src")
-                    if photo_item_link:
-                        creator = "-"
                         lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                         writer.writerow(lst)
                         browser.quit()
                 except:
-                    creator = "-"
                     photo_item_link = "-"
                     lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                     writer.writerow(lst)
-        except Exception as e:
-            print(e)
+                    browser.quit()
+        except:
+            try:
+                creator = "-"
+                photo_item_link = "-"
+                lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
+                writer.writerow(lst)
+                browser.quit()
+            except:
+                continue
+
 
 end = time.time()
-
 print(end - start)
