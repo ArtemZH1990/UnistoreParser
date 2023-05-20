@@ -62,7 +62,7 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
     price_container = list(filter(lambda x: x.isdigit() == True, [i.strip("рк") for i in price_info]))
     actual_price = int(price_container[0]) + int(price_container[1]) / 100
     quantity_con = browser.find_elements(By.XPATH, min_quantity_XPATH)
-    filtered_quantity = [int(i.text.split()[-1]) for i in quantity_con]
+    filtered_quantity = [i.text.split()[-1] for i in quantity_con]
     min_quantity = filtered_quantity[0]
     quantity_in_box = filtered_quantity[1]
 
@@ -78,40 +78,30 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                 if photo_item_link:
                     if len(item_description) == 1:
                         creator = item_description[0].text
-                        supplier = "-"
-                        lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
+                        lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                         writer.writerow(lst)
-                    elif len(item_description) > 1:
-                        creator = item_description[0].text
-                        supplier = item_description[1].text
-                        lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
-                        writer.writerow(lst)
+                        browser.quit()
+
             except:
                 photo_item_link = "-"
                 if len(item_description) == 1:
                     creator = item_description[0].text
-                    supplier = "-"
-                    lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
+                    lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                     writer.writerow(lst)
+                    browser.quit()
 
-                elif len(item_description) > 1:
-                    creator = item_description[0].text
-                    supplier = item_description[1].text
-                    lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
-                    writer.writerow(lst)
         else:
             try:
                 photo_item_link = browser.find_element(By.XPATH, photo_item_link_XPATH).get_attribute("src")
                 if photo_item_link:
                     creator = "-"
-                    supplier = "-"
-                    lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
+                    lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                     writer.writerow(lst)
+                    browser.quit()
             except:
                 creator = "-"
-                supplier = "-"
                 photo_item_link = "-"
-                lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator, supplier]
+                lst = [item_name, actual_price, min_quantity, quantity_in_box, photo_item_link, creator]
                 writer.writerow(lst)
     except Exception as e:
         print(e)
