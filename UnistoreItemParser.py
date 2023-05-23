@@ -10,6 +10,7 @@ import lxml
 import requests
 import html
 import time
+import datetime
 
 # -----Locators--------#
 every_item_XPATH = "//div[@class='img']//a[@class='fancy_ajax']"
@@ -42,7 +43,7 @@ def browser_getter(url):
     browser = webdriver.Chrome()
     browser.maximize_window()
     browser.get(url)
-    browser.implicitly_wait(20)
+    browser.implicitly_wait(8)
     return browser
 
 
@@ -52,10 +53,15 @@ def soup_getter(url):
     return BeautifulSoup(res.text, "lxml")
 
 start = time.time()
-with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\UnistoreItemParser.csv",
+data = datetime.date.today()
+with open(rf"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\CSV_Files\UnistoreItemParser{data}.csv",
           "a",
-          encoding="utf-8-sig", newline="") as file:
+          encoding="utf-8-sig", newline="") as file, open(rf"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\CSV_Files\UnistoreItemParser{data}.csv",
+                                                          "a",
+                                                          encoding="utf-8-sig", newline="") as bug_link_file:
+
     writer = csv.writer(file, delimiter=";")
+    bug_writer = csv.writer(bug_link_file, delimiter=";")
     writer.writerow(columns)
 
     # Needed header in request
@@ -170,6 +176,7 @@ with open(r"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\
                 writer.writerow(lst)
                 browser.quit()
             except:
+                bug_writer.writerow(i)
                 continue
 
 
