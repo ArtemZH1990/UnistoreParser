@@ -56,7 +56,7 @@ start = time.time()
 data = datetime.date.today()
 with open(rf"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\CSV_Files\UnistoreItemParser{data}.csv",
           "a",
-          encoding="utf-8-sig", newline="") as file, open(rf"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\CSV_Files\UnistoreItemParser{data}.csv",
+          encoding="utf-8-sig", newline="") as file, open(rf"C:\Users\ART\PycharmProjects\pythonProjects2023\Work\UnistoreParser\UnistoreParser\CSV_Files\UnistoreBugLinks{data}.csv",
                                                           "a",
                                                           encoding="utf-8-sig", newline="") as bug_link_file:
 
